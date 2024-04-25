@@ -1,0 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body{
+
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(to bottom, #FED9B7, #00AFB9);
+    /* background-image: url('/img/Gradient-background.jpg');*/
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+}
+
+.img{
+    width: 150px;
+    height: 100px;
+    margin: 15px auto;
+}
+/*
+.entrar{
+    text-align: center;
+    width: 85%; 
+    max-width: 420px; 
+    height: 300px;
+    margin: 15px auto;
+    border: solid 2px #fff;
+    border-radius: 25px;
+}
+
+.logo{
+    text-align: center;
+}
+
+.cVazio1{
+    max-width: 1144px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.btn{
+    text-align: center;
+    width: 85%;
+    margin: 15px auto;
+
+}
+
+h2{
+    text-align: center;
+}
+
+
+#lista-salas{
+
+    width: 70%; 
+    height: 30%;
+    padding: 10px;
+    border: solid 2px #fff;
+    align-items: center;
+    margin: 15px auto;
+    border-radius: 15px;
+}
+
+.salas1{
+    display: none;
+}
+.lista-salas{
+    
+    text-align: center;
+    width: 85%; 
+    max-width: 420px; 
+   
+    margin: 15px auto;
+    border: solid 2px #fff;
+    border-radius: 25px;
+
+}
+
+.form-control{
+    text-align: center;
+    width: 85%;
+    margin: 15px auto;
+}
+.form-group{
+    text-align: center;
+    width: 85%;
+    margin: 15px auto;
+}*/
+
+#lista-salas{
+	display:none;
+}
+
+#mensagens-sala{
+	background-color: black;
+	display:none;
+}
+
+#cria-sala{
+	display:none;
+}
