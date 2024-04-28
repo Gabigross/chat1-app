@@ -1,4 +1,5 @@
-const urlAPI = "https://chat-api-opz7.onrender.com";
+const urlApi = 'https://chat-api-opz7.onrender.com';
+
 const entrada = document.querySelector("#entrada");
 const listaSalas = document.querySelector("#lista-salas");
 const mensagensSala = document.querySelector("#mensagens-sala");
@@ -20,7 +21,7 @@ document.querySelector('#entrar').addEventListener('click', (evt) => {
 });
 
 const entrarUser = (nick) =>{
-	fetch(urlAPI+"/entrar", {
+	fetch(urlApi+"/entrar", {
     method: "POST",
     headers: {"Content-type": "application/json;charset=UTF-8"}, 
     body:JSON.stringify({nick: nick}) 
@@ -47,7 +48,7 @@ const entrarUser = (nick) =>{
 // listar salas
 const mostrarSalas = () => {
   if (user.token && user.nick) {
-      fetch(urlAPI + "/salas", {
+      fetch(urlApi + "/salas", {
               method: "GET",
               headers: {
                   'Content-Type': 'application/json',
@@ -79,8 +80,17 @@ const mostrarSalas = () => {
                           entrarNaSala(idSala);
 
                           listaSalas.style.display='none';
-                      });
-                  });
+                        });
+                    });
+
+                const botaoSairUser = document.createElement("button");
+                    botaoSairUser.textContent = "Sair do Usuário";
+                    botaoSairUser.classList.add("btn", "btn-danger", "btn-sm");
+                    botaoSairUser.addEventListener('click', () => {
+                    sairDoUser(user.idUser); 
+                });
+                    listaSalas.appendChild(botaoSairUser);
+
               } else {
                   console.error("Resposta da API não contém dados");
               }
@@ -92,7 +102,7 @@ const mostrarSalas = () => {
 }
 // entrar na sala
 function entrarNaSala(idSala) {
-    fetch(`${urlAPI}/sala/entrar?idsala=${idSala}`, {
+    fetch(`${urlApi}/sala/entrar?idsala=${idSala}`,{
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -121,9 +131,7 @@ function entrarNaSala(idSala) {
                     listaSalas.style.display='none';
                 });
             
-
-            // Iniciar atualização de mensagens periodicamente após entrar na sala
-            atualizarMensagensPeriodicamente()
+            atualizarMSG()
         }else {
             console.log("Resposta da API inválida:", data);
         }
@@ -132,12 +140,9 @@ function entrarNaSala(idSala) {
         console.error("Erro na requisição:", error);
     });
 }
-
-
-
-
+// enviar msg
 function enviarMensagem(msg, salaSelecionadaId) {
-    fetch(`${urlAPI}/sala/mensagem?idSala=${salaSelecionadaId}`, {
+    fetch(`${urlApi}/sala/mensagem?idSala=${salaSelecionadaId}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -154,11 +159,11 @@ function enviarMensagem(msg, salaSelecionadaId) {
     .then((data) => {
         console.log(data);
         if (data.msg === 'OK') {
-            // Limpar campo de mensagem após o envio
+            
             inputMensagem.value = "";
-            // Mostrar aviso de mensagem enviada
+            
             exibirAviso("Mensagem enviada: " + msg);
-            // Atualizar mensagens na sala após o envio
+            
             mostrarMensagens(salaSelecionadaId);
         } else {
             console.log("Resposta da API inválida:", data);
@@ -169,22 +174,23 @@ function enviarMensagem(msg, salaSelecionadaId) {
     });
 }
 
-// Função para exibir aviso de mensagem enviada
+// aviso de mensagem enviada
 function exibirAviso(aviso) {
     console.log(aviso);
 }
 
-// Atualizar mensagens periodicamente
-function atualizarMensagensPeriodicamente() {
+// Atualizar mensagens 
+function atualizarMSG() {
     if (salaSelecionadaId) {
         mostrarMensagens(salaSelecionadaId);
-        setTimeout(atualizarMensagensPeriodicamente, 5000); // Atualizar a cada 5 segundos
+        setTimeout(atualizarMSG, 5000); 
     }
 }
+// mostra msg
 function mostrarMensagens(idSala, time) {
     salaSelecionadaId = idSala;
  
-    fetch(`${urlAPI}/sala/mensagens?idSala=${idSala}&timestamp=`,{
+    fetch(`${urlApi}/sala/mensagens?idSala=${idSala}&timestamp=`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -195,19 +201,106 @@ function mostrarMensagens(idSala, time) {
     })
     .then((res) => res.json())
     .then((data) => {
-        if (data) {
+        if (data && data.msgs) {
             mensagensContainer.innerHTML = "";
- 
-            data.forEach((msgs) => {
+
+            const msgs = data.msgs;
+            if (Array.isArray(msgs)) {
+                
+                msgs.forEach((msg) => {
+                    const mensagemElement = document.createElement("div");
+                    mensagemElement.textContent = `${msg.nick}: ${msg.msg}`;
+                    mensagensContainer.appendChild(mensagemElement);
+                });
+            } else {
+                
                 const mensagemElement = document.createElement("div");
                 mensagemElement.textContent = `${msgs.nick}: ${msgs.msg}`;
                 mensagensContainer.appendChild(mensagemElement);
-            });
+            }
         } else {
             console.error("Resposta da API não contém dados");
         }
     })
     .catch((error) => {
         console.error("Erro na requisição lista msg:", error);
+    });
+}
+
+// button sair
+function criarBotaoSairSala() {
+    const botaoSair = document.createElement("button");
+    botaoSair.textContent = "Sair da Sala";
+    botaoSair.classList.add("btn", "btn-danger", "btn-sm");
+    botaoSair.id = "sair-sala";
+    mensagensSala.appendChild(botaoSair);
+}
+criarBotaoSairSala();
+
+// ev sair
+document.querySelector('#sair-sala').addEventListener('click', () => {
+    sairDaSala();
+});
+
+
+// Função para sair da sala
+function sairDaSala() {
+    fetch(`${urlApi}/sala/sair`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'nick': user.nick,
+            'token': user.token,
+            'idUser': user.idUser
+        }
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+        if (data) {
+            
+            mensagensContainer.innerHTML = "";
+            
+            mensagensSala.style.display = 'none';
+            
+            listaSalas.style.display = 'block';
+            
+            salaSelecionadaId = null;
+        } else {
+            console.log("Erro ao sair da sala:", data);
+        }
+    })
+    .catch((error) => {
+        console.error("Erro na requisição:", error);
+    });
+}
+
+// Função para sair da sala
+function sairDoUser(idUser) {
+
+    fetch(`${urlApi}/sair-user?idUser=${idUser}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'nick': user.nick,
+            'token': user.token,
+            'idUser': user.idUser
+        }
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+        if (data.msg === 'OK') {
+            
+            listaSalas.style.display = 'none';
+            
+            entrada.style.display = 'block';
+
+        } else {
+            console.log("Erro ao sair do usuario", data);
+        }
+    })
+    .catch((error) => {
+        console.error("Erro na requisição:", error);
     });
 }
