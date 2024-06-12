@@ -9,7 +9,7 @@ body{
 
     width: 100vw;
     height: 100vh;
-    background-image: linear-gradient(to bottom, #FED9B7, #00AFB9);
+    background-image: linear-gradient(to bottom, #d2b7fe00, #b90000d9);
     /* background-image: url('/img/Gradient-background.jpg');*/
     background-size: 100%;
     background-repeat: no-repeat;
@@ -27,15 +27,17 @@ body{
     text-align: center;
 }
 
-#lista-salas{
+.lista-salas{
 	display:none;
+    
     width: 70%; 
     height: 30%;
     padding: 10px;
-    border: solid 2px #fff;
+    border: solid 3px #fff;
     margin: 15px auto;
     border-radius: 15px;
     align-items: center;
+    
 }
 
 #mensagens-sala{
@@ -58,6 +60,7 @@ body{
     text-align: center;
     width: 85%;
     margin: 15px auto;
-    margin-top: 15px;
+    margin-top: 15px ;
     margin: 15px 15px 15px 15px;
+
 }
